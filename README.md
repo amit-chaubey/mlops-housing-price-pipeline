@@ -25,8 +25,6 @@ An end-to-end project for **housing price prediction** covering:
 - Model serving via FastAPI (Uvicorn) and a Streamlit UI client
 - Containerization with Docker and orchestration-ready deployment scaffolding
 
-**Owner / Maintainer**: Amit Choubey (Hector Labs)
-
 ---
 
 ## Architecture (high level)
@@ -323,6 +321,4 @@ Managed production: **AWS EKS** (or equivalent), with an ingress controller + ma
 
 ---
 
-## Ownership
-
-Copyright © Amit Choubey (Hector Labs). All rights reserved.
+<div>
