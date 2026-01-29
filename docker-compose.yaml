@@ -1,0 +1,33 @@
+version: "3.8"
+
+# Local multi-service setup:
+# - `fastapi`: model inference API (Uvicorn/FastAPI)
+# - `streamlit`: UI that calls the API using the internal Compose network name `fastapi`
+#
+# Notes:
+# - `image` tags name the resulting local build (handy for `docker images` / reuse).
+# - `build.context` points at the directory used as the Docker build context.
+# - Host ports map to container ports so you can access services from your machine.
+services:
+  fastapi:
+    # Built from the repo root `Dockerfile` (FastAPI inference container).
+    image: akatyayana/fastapi-ml:dev
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      # Host -> container: http://localhost:8000 -> http://container:8000
+      - "8000:8000"
+  streamlit:
+    # Built from `streamlit_app/Dockerfile` (Streamlit UI container).
+    image: akatyayana/streamlit-ml:dev
+    build:
+      context: ./streamlit_app
+      dockerfile: Dockerfile
+    ports:
+      # Host -> container: http://localhost:8501 -> http://container:8501
+      - "8501:8501"
+    environment:
+      # `fastapi` is reachable via its service name on the default Compose network.
+      # This is consumed by the Streamlit app to send inference requests.
+      API_URL: http://fastapi:8000
