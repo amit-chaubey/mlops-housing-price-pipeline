@@ -203,7 +203,7 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: docker.io/${{ vars.DOCKERHUB_USERNAME }}/fastapi:dev
+          tags: docker.io/${{ vars.DOCKERHUB_USERNAME }}/fastapi-ml:dev
 
       - name: Build & push Streamlit image
         uses: docker/build-push-action@v5
@@ -211,5 +211,5 @@ jobs:
           context: ./streamlit_app
           file: ./streamlit_app/Dockerfile
           push: true
-          tags: docker.io/${{ vars.DOCKERHUB_USERNAME }}/streamlit:dev
+          tags: docker.io/${{ vars.DOCKERHUB_USERNAME }}/streamlit-ml:dev
 
