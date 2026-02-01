@@ -27,6 +27,15 @@ on:
         required: false
         default: "false"
 
+#
+# Pipeline philosophy (keep it simple + scalable):
+# - On every PR/push: run fast sanity checks (dependency install).
+# - On demand (workflow_dispatch): run heavier stages (data -> train -> build).
+#
+env:
+  PYTHON_VERSION: "3.11"
+  MLFLOW_PORT: "5555" # Keep consistent with local MLflow usage
+
 jobs:
   install-dependencies:
     name: Install dependencies (${{ matrix.name }})
@@ -49,7 +58,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: ${{ env.PYTHON_VERSION }}
           cache: pip
           cache-dependency-path: |
             requirements.txt
@@ -73,7 +82,7 @@ jobs:
           inputs.run_data_processing == 'true' ||
           inputs.run_model_training == 'true' ||
           inputs.run_build_and_publish == 'true'
-        ) }}
+        )}}
 
     steps:
       - name: Checkout code
@@ -82,7 +91,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: ${{ env.PYTHON_VERSION }}
           cache: pip
           cache-dependency-path: requirements.txt
 
@@ -92,9 +101,11 @@ jobs:
           python -m pip install -r requirements.txt
 
       - name: Process data (raw -> cleaned)
-        # NOTE: This script uses hard-coded paths in __main__ (no CLI args).
+        # `src/data/run_processing.py` supports CLI args (and has sensible defaults too).
         run: |
-          python src/data/run_processing.py
+          python src/data/run_processing.py \
+            --input data/raw/house_data.csv \
+            --output data/processed/cleaned_house_data.csv
 
       - name: Engineer features (cleaned -> featured + preprocessor)
         run: |
@@ -136,7 +147,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: ${{ env.PYTHON_VERSION }}
           cache: pip
           cache-dependency-path: requirements.txt
 
@@ -160,7 +171,7 @@ jobs:
       - name: Start MLflow tracking server (local to runner)
         run: |
           docker pull ghcr.io/mlflow/mlflow:latest
-          docker run -d -p 5000:5000 --name mlflow-server \
+          docker run -d -p ${{ env.MLFLOW_PORT }}:5000 --name mlflow-server \
             ghcr.io/mlflow/mlflow:latest \
             mlflow server \
               --host 0.0.0.0 \
@@ -171,7 +182,7 @@ jobs:
       - name: Wait for MLflow to start
         run: |
           for i in {1..20}; do
-            if curl -fsS http://localhost:5000/ >/dev/null; then
+            if curl -fsS "http://localhost:${{ env.MLFLOW_PORT }}/" >/dev/null; then
               echo "MLflow is up."
               exit 0
             fi
@@ -188,7 +199,7 @@ jobs:
             --config configs/model_config.yaml \
             --data data/processed/featured_house_data.csv \
             --models-dir models \
-            --mlflow-tracking-uri http://localhost:5000
+            --mlflow-tracking-uri "http://localhost:${{ env.MLFLOW_PORT }}"
 
       - name: Upload trained artifacts (for Docker build)
         uses: actions/upload-artifact@v4
@@ -233,8 +244,8 @@ jobs:
         uses: docker/login-action@v3
         with:
           registry: docker.io
-          username: ${{ vars.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          username: ${{ vars.DOCKERHUB_USERNAME }} # settings -> secrets and variables -> actions -> variables
+          password: ${{ secrets.DOCKERHUB_TOKEN }} # settings -> secrets and variables -> actions -> secrets
 
       - name: Build & push FastAPI image
         uses: docker/build-push-action@v5
