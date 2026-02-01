@@ -1,21 +1,9 @@
-name: MLOps CI
+name: MLOps Manual Pipeline
 
 on:
-  push:
-    branches: [ main ]
-    # Release tags like v1.2.3
-    tags: [ 'v*.*.*' ]
-  pull_request:
-    branches: [ main ]
 
-  # Manual runs are useful for debugging / demos.
-  workflow_dispatch:
+  workflow_dispatch: {}
 
-#
-# Execution flow (lego-style, simple & predictable):
-# 1) data-processing  -> produces processed data + preprocessor (artifacts)
-# 2) model-training   -> consumes processed data, trains model (artifact)
-# 3) build-and-publish-> consumes artifacts, builds and optionally pushes Docker image
 #
 env:
   PYTHON_VERSION: "3.11"
@@ -155,8 +143,6 @@ jobs:
     name: Build & publish container image
     needs: model-training
     runs-on: ubuntu-latest
-    # Never push images from PRs (secrets are unavailable for forks).
-    if: ${{ github.event_name != 'pull_request' }}
 
     steps:
       - name: Checkout code
