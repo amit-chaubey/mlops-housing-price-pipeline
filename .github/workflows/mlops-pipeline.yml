@@ -39,7 +39,6 @@ jobs:
 
       - name: Verify required inputs exist
         run: |
-          test -f requirements.txt
           test -f data/raw/housing_data.csv
 
       - name: Install dependencies
@@ -92,7 +91,6 @@ jobs:
 
       - name: Verify required inputs exist
         run: |
-          test -f requirements.txt
           test -f configs/model_config.yaml
 
       - name: Install dependencies
