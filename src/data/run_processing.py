@@ -82,6 +82,6 @@ def process_data(input_file, output_file):
 if __name__ == "__main__":
     # Example usage
     process_data(
-        input_file="data/raw/house_data.csv", 
+        input_file="data/raw/housing_data.csv", 
         output_file="data/processed/cleaned_house_data.csv"
     )
