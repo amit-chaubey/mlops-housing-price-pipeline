@@ -24,9 +24,13 @@ RUN pip install --upgrade pip \
 COPY src/api/ /app/
 
 # Copy trained model artifacts into the container so inference can run offline.
-# The `mkdir` ensures the destination exists even if the build context has no models.
+# Note:
+# - CI/PR builds might not have trained artifacts present (because `*.pkl` are gitignored).
+# - Full "production-like" images should be built after training, when `models/trained/*.pkl`
+#   exist in the build context (or mounted at runtime).
 RUN mkdir -p models/trained
-COPY models/trained/*.pkl models/trained/
+# Copy the directory (not a glob) so the build won't fail when no `.pkl` exist yet.
+COPY models/trained/ models/trained/
 
 # Document the port the container listens on (Uvicorn `--port 8000`).
 EXPOSE 8000
