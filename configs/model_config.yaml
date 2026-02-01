@@ -1,0 +1,37 @@
+model:
+  best_model: RandomForest
+  feature_sets:
+    rfe:
+    - '0'
+    - '2'
+    - '3'
+    - '4'
+    - '5'
+    - '9'
+    - '12'
+    - '13'
+    - '14'
+    - '15'
+  mae: 12284.375
+  name: house_price_model
+  parameters:
+    bootstrap: true
+    ccp_alpha: 0.0
+    criterion: squared_error
+    max_depth: 20
+    max_features: 1.0
+    max_leaf_nodes: null
+    max_samples: null
+    min_impurity_decrease: 0.0
+    min_samples_leaf: 1
+    min_samples_split: 2
+    min_weight_fraction_leaf: 0.0
+    monotonic_cst: null
+    n_estimators: 100
+    n_jobs: null
+    oob_score: false
+    random_state: null
+    verbose: 0
+    warm_start: false
+  r2_score: 0.9926998575014995
+  target_variable: price
