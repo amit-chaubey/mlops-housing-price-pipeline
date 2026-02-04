@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: "2026-02-02T23:50:06Z"
+  labels:
+    app: model
+  name: model
+  namespace: default
+  resourceVersion: "24998"
+  uid: 953082a4-89ca-4acf-964c-dcb3753bf2ec
+spec:
+  clusterIP: 10.96.84.192
+  clusterIPs:
+  - 10.96.84.192
+  externalTrafficPolicy: Cluster
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+  - name: "8000"
+    nodePort: 30100
+    port: 8000
+    protocol: TCP
+    targetPort: 8000
+  selector:
+    app: model
+  sessionAffinity: None
+  type: NodePort
+status:
+  loadBalancer: {}
