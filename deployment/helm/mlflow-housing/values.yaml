@@ -1,0 +1,9 @@
+# Default values for mlflow-housing. Override per environment.
+replicaCount: 1
+image:
+  model:
+    repository: akatyayana/ml-housing-price-model
+    tag: latest
+  ui:
+    repository: akatyayana/ml-housing-price-streamlit
+    tag: latest
