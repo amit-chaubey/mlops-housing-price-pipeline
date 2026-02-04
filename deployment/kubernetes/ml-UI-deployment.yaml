@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "1"
+  creationTimestamp: "2026-02-02T23:17:27Z"
+  generation: 2
+  labels:
+    app: streamlit-app
+  name: streamlit-app
+  namespace: default
+  resourceVersion: "21821"
+  uid: 7031bc72-152a-4761-bca5-6cbdb82899dd
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 3
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: streamlit-app
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: streamlit-app
+    spec:
+      containers:
+      - image: akatyayana/ml-housing-price-streamlit
+        imagePullPolicy: Always
+        name: ml-housing-price-streamlit
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+status:
+  availableReplicas: 3
+  conditions:
+  - lastTransitionTime: "2026-02-02T23:17:27Z"
+    lastUpdateTime: "2026-02-02T23:17:46Z"
+    message: ReplicaSet "streamlit-app-5b466477c" has successfully progressed.
+    reason: NewReplicaSetAvailable
+    status: "True"
+    type: Progressing
+  - lastTransitionTime: "2026-02-02T23:22:43Z"
+    lastUpdateTime: "2026-02-02T23:22:43Z"
+    message: Deployment has minimum availability.
+    reason: MinimumReplicasAvailable
+    status: "True"
+    type: Available
+  observedGeneration: 2
+  readyReplicas: 3
+  replicas: 3
+  terminatingReplicas: 0
+  updatedReplicas: 3
