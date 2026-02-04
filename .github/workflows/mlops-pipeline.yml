@@ -3,10 +3,24 @@ name: MLOps Pipeline
 on:
   push:
     branches: [ main ]
-    # Release tags like v1.2.3
     tags: [ 'v*.*.*' ]
+    # Only run when pipeline-relevant code changes (not e.g. deployment/, docs, streamlit).
+    paths:
+      - "src/**"
+      - "data/raw/**"
+      - "configs/**"
+      - "requirements.txt"
+      - "Dockerfile"
+      - ".github/workflows/mlops-pipeline.yml"
   pull_request:
     branches: [ main ]
+    paths:
+      - "src/**"
+      - "data/raw/**"
+      - "configs/**"
+      - "requirements.txt"
+      - "Dockerfile"
+      - ".github/workflows/mlops-pipeline.yml"
 
 #
 # Execution flow (lego-style, simple & predictable):
