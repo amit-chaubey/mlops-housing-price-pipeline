@@ -1,0 +1,27 @@
+# Base: ML UI (Streamlit) deployment — customize in overlays (dev/prod).
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ml-ui
+  labels:
+    app: ml-ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ml-ui
+  template:
+    metadata:
+      labels:
+        app: ml-ui
+    spec:
+      containers:
+        - name: ml-housing-price-streamlit
+          image: akatyayana/ml-housing-price-streamlit:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8501
+          env:
+            - name: API_URL
+              value: "http://ml-model:8000"
+          resources: {}

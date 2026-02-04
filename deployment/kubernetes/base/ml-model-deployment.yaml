@@ -1,0 +1,24 @@
+# Base: ML model (FastAPI) deployment — customize in overlays (dev/prod).
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ml-housing-price-model
+  labels:
+    app: ml-model
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ml-model
+  template:
+    metadata:
+      labels:
+        app: ml-model
+    spec:
+      containers:
+        - name: ml-housing-price-model
+          image: akatyayana/ml-housing-price-model:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8000
+          resources: {}

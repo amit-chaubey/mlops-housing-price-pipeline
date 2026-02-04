@@ -1,0 +1,15 @@
+# Base: ML UI (Streamlit) service — customize in overlays (dev/prod).
+apiVersion: v1
+kind: Service
+metadata:
+  name: ml-ui
+  labels:
+    app: ml-ui
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8501
+      targetPort: 8501
+      name: http
+  selector:
+    app: ml-ui
