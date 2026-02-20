@@ -31,7 +31,7 @@ st.title("House Price Prediction")
 st.markdown(
     """
     <p style="font-size: 16px; color: #6b7280; margin-bottom: 1.5rem;">
-        Real-time house price prediction · MLOps demo
+        Real-time house price prediction · MLOps 
     </p>
     """,
     unsafe_allow_html=True,
@@ -44,8 +44,8 @@ col1, col2 = st.columns(2, gap="large")
 with col1:
     st.markdown('<div class="card">', unsafe_allow_html=True)
 
-    # Square Footage slider
-    st.markdown(f"<p><strong>Square Footage:</strong> <span id='sqft-value'></span></p>", unsafe_allow_html=True)
+    # Square foot slider
+    st.markdown(f"<p><strong>Square foot:</strong> <span id='sqft-value'></span></p>", unsafe_allow_html=True)
     sqft = st.slider("", 500, 5000, 1500, 50, label_visibility="collapsed", key="sqft")
     st.markdown(f"<script>document.getElementById('sqft-value').innerText = '{sqft} sq ft';</script>", unsafe_allow_html=True)
 
@@ -65,7 +65,7 @@ with col1:
 
     # Year Built slider
     st.markdown(f"<p><strong>Year Built:</strong> <span id='year-value'></span></p>", unsafe_allow_html=True)
-    year_built = st.slider("", 1900, 2025, 2000, 1, label_visibility="collapsed", key="year")
+    year_built = st.slider("", 1900, 2023, 2000, 1, label_visibility="collapsed", key="year")
     st.markdown(f"<script>document.getElementById('year-value').innerText = '{year_built}';</script>", unsafe_allow_html=True)
 
     # Predict button
@@ -96,8 +96,6 @@ with col2:
                 # Get API endpoint from environment variable or use default
                 api_endpoint = os.getenv("API_URL", "http://model:8000")
                 predict_url = f"{api_endpoint.rstrip('/')}/predict"
-
-                st.write(f"Connecting to API at: {predict_url}")
 
                 # Make API call to FastAPI backend
                 response = requests.post(predict_url, json=api_data)
@@ -131,43 +129,28 @@ with col2:
         formatted_price = "${:,.0f}".format(pred["predicted_price"])
         st.markdown(f'<div class="prediction-value">{formatted_price}</div>', unsafe_allow_html=True)
 
-        # Display confidence score and model used
-        col_a, col_b = st.columns(2)
-        with col_a:
-            st.markdown('<div class="info-card">', unsafe_allow_html=True)
-            st.markdown('<p class="info-label">Confidence Score</p>', unsafe_allow_html=True)
-            st.markdown('<p class="info-value">92%</p>', unsafe_allow_html=True)
-            st.markdown('</div>', unsafe_allow_html=True)
+        # Display model used
+        st.markdown('<div class="info-card">', unsafe_allow_html=True)
+        st.markdown('<p class="info-label">Model Used</p>', unsafe_allow_html=True)
+        st.markdown('<p class="info-value">XGBoost</p>', unsafe_allow_html=True)
+        st.markdown('</div>', unsafe_allow_html=True)
 
-        with col_b:
-            st.markdown('<div class="info-card">', unsafe_allow_html=True)
-            st.markdown('<p class="info-label">Model Used</p>', unsafe_allow_html=True)
-            st.markdown('<p class="info-value">XGBoost</p>', unsafe_allow_html=True)
-            st.markdown('</div>', unsafe_allow_html=True)
-
-        # Display price range and prediction time
-        col_c, col_d = st.columns(2)
-        with col_c:
-            st.markdown('<div class="info-card">', unsafe_allow_html=True)
-            st.markdown('<p class="info-label">Price Range</p>', unsafe_allow_html=True)
-            lower = "${:,.1f}".format(pred["confidence_interval"][0])
-            upper = "${:,.1f}".format(pred["confidence_interval"][1])
-            st.markdown(f'<p class="info-value">{lower} - {upper}</p>', unsafe_allow_html=True)
-            st.markdown('</div>', unsafe_allow_html=True)
-
-        with col_d:
-            st.markdown('<div class="info-card">', unsafe_allow_html=True)
-            st.markdown('<p class="info-label">Prediction Time</p>', unsafe_allow_html=True)
-            st.markdown('<p class="info-value">0.12 seconds</p>', unsafe_allow_html=True)
-            st.markdown('</div>', unsafe_allow_html=True)
+        # Display price range
+        st.markdown('<div class="info-card">', unsafe_allow_html=True)
+        st.markdown('<p class="info-label">Price Range</p>', unsafe_allow_html=True)
+        lower = "${:,.1f}".format(pred["confidence_interval"][0])
+        upper = "${:,.1f}".format(pred["confidence_interval"][1])
+        st.markdown(f'<p class="info-value">{lower} - {upper}</p>', unsafe_allow_html=True)
+        st.markdown('</div>', unsafe_allow_html=True)
 
         # Top factors
         st.markdown('<div class="top-factors">', unsafe_allow_html=True)
-        st.markdown("<p><strong>Top Factors Affecting Price:</strong></p>", unsafe_allow_html=True)
+        st.markdown("<p><strong>Top Price Drivers:</strong></p>", unsafe_allow_html=True)
         st.markdown("""
         <ul>
-            <li>Square Footage</li>
-            <li>Number of Bedrooms/Bathrooms</li>
+            <li>Square foot</li>
+            <li>Number of Bedrooms to Bathrooms ratio</li>
+            <li>Location</li>
         </ul>
         """, unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
@@ -191,7 +174,7 @@ st.markdown("<hr>", unsafe_allow_html=True)
 st.markdown(
     f"""
     <div style="text-align: center; color: #6b7280; margin-top: 20px; font-size: 14px;">
-        <p><strong>HectorLabs</strong> · Built by <strong>Amit Choubey</strong></p>
+        <p><strong>HectorLabs</strong> · Built by <a href="https://www.amitchoubey.dev/" target="_blank" style="color: #6b7280;"><strong>Amit Choubey</strong></a></p>
         <p><a href="https://www.hectorlabs.co.uk" target="_blank" style="color: #6b7280;">hectorlabs.co.uk</a></p>
         <p style="margin-top: 12px;"><strong>Version:</strong> {version} · <strong>Host:</strong> {hostname} · <strong>IP:</strong> {ip_address}</p>
     </div>
