@@ -12,6 +12,9 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
+
+
+
 # Minimal custom styles for cards and layout (no path/var/constant changes)
 st.markdown(
     """
@@ -26,6 +29,8 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
+
+
 # Add title and description
 st.title("House Price Prediction")
 st.markdown(
@@ -36,6 +41,7 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
+
 
 # Create a two-column layout
 col1, col2 = st.columns(2, gap="large")
@@ -95,6 +101,7 @@ with col2:
             try:
                 # Get API endpoint from environment variable or use default
                 api_endpoint = os.getenv("API_URL", "http://model:8000")
+                # api_endpoint = "http://localhost:8000"
                 predict_url = f"{api_endpoint.rstrip('/')}/predict"
 
                 # Make API call to FastAPI backend

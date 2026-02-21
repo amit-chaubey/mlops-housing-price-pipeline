@@ -22,6 +22,8 @@ services:
       # Optional: mount locally trained artifacts into the container.
       # This keeps the image build simple while enabling real inference locally.
       - ./models/trained:/app/models/trained
+
+      
   streamlit:
     # Built from `streamlit_app/Dockerfile` (Streamlit UI container).
     image: akatyayana/streamlit-ml:dev
